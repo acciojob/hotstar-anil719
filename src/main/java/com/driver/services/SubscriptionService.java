@@ -55,24 +55,23 @@ public class SubscriptionService {
         //If you are already at an ElITE subscription : then throw Exception ("Already the best Subscription")
         //In all other cases just try to upgrade the subscription and tell the difference of price that user has to pay
         //update the subscription in the repository
-        User user = userRepository.findById(userId).get();
-        Subscription subscription = user.getSubscription();
-        if(subscription.getSubscriptionType() == SubscriptionType.ELITE) throw new Exception("Already the best Subscription");
-
-        int price = -1;
-        if(subscription.getSubscriptionType() == SubscriptionType.BASIC){
-            int oldPrice = subscription.getTotalAmountPaid();
-            subscription.setSubscriptionType(SubscriptionType.PRO);
-            price = 850 + 250 * subscription.getNoOfScreensSubscribed() - oldPrice;
-
-        }
-        else if(subscription.getSubscriptionType() == SubscriptionType.PRO){
-            int oldPrice = subscription.getTotalAmountPaid();
-            subscription.setSubscriptionType(SubscriptionType.PRO);
-            price = 1000 + 350 * subscription.getNoOfScreensSubscribed() - oldPrice;
-        }
-        subscriptionRepository.save(subscription);
-        return price;
+       User user = userRepository.findById(userId).get();
+       Subscription subscription = user.getSubscription();
+       SubscriptionType userPack = subscription.getSubscriptionType();
+       if(userPack == SubscriptionType.ELITE) throw new Exception("Already the best Subscription");
+       int diff = 0;
+       if(userPack == SubscriptionType.BASIC){
+           diff =  800 + 250 * subscription.getNoOfScreensSubscribed() - 500 + 200 * subscription.getNoOfScreensSubscribed();
+           subscription.setTotalAmountPaid(subscription.getTotalAmountPaid()+diff);
+           subscription.setSubscriptionType(SubscriptionType.PRO);
+       }
+       else if(userPack == SubscriptionType.PRO){
+           diff = 1000 + 350 * subscription.getNoOfScreensSubscribed() - 800 + 250 * subscription.getNoOfScreensSubscribed();
+           subscription.setTotalAmountPaid(subscription.getTotalAmountPaid()+diff);
+           subscription.setSubscriptionType(SubscriptionType.PRO);
+       }
+       subscriptionRepository.save(subscription);
+       return diff;
     }
 
     public Integer calculateTotalRevenueOfHotstar(){
