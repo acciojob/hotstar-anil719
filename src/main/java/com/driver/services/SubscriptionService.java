@@ -68,7 +68,7 @@ public class SubscriptionService {
        else if(userPack == SubscriptionType.PRO){
            diff = 1000 + 350 * subscription.getNoOfScreensSubscribed() - 800 + 250 * subscription.getNoOfScreensSubscribed();
            subscription.setTotalAmountPaid(subscription.getTotalAmountPaid()+diff);
-           subscription.setSubscriptionType(SubscriptionType.PRO);
+           subscription.setSubscriptionType(SubscriptionType.ELITE);
        }
        subscriptionRepository.save(subscription);
        return diff;
@@ -88,7 +88,6 @@ public class SubscriptionService {
                 revenue += totalAmountPaid;
             }
         }
-
         return revenue;
     }
 
