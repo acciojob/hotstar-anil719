@@ -37,8 +37,16 @@ public class UserService {
         List<WebSeries> webSeriesList = webSeriesRepository.findAll();
         int ans = 0;
         for(WebSeries webSeries : webSeriesList){
-            if(webSeries.getSubscriptionType() == user.getSubscription().getSubscriptionType() &&
-            user.getAge() >= webSeries.getAgeLimit()) ans++;
+            int age = user.getAge();
+            SubscriptionType userSubscription = user.getSubscription().getSubscriptionType();
+            SubscriptionType webSeriesSubscription = webSeries.getSubscriptionType();
+
+            if(age >= webSeries.getAgeLimit() && userSubscription == SubscriptionType.ELITE) ans++;   //can watch all series & shows
+            else if(age >= webSeries.getAgeLimit() && userSubscription == SubscriptionType.PRO &&
+            webSeriesSubscription == SubscriptionType.BASIC || webSeriesSubscription == SubscriptionType.PRO) ans++;
+
+            else if(age >= webSeries.getAgeLimit() && userSubscription == SubscriptionType.BASIC
+            && webSeriesSubscription == SubscriptionType.BASIC) ans++;
         }
 
         return ans;
