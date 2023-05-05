@@ -78,10 +78,15 @@ public class SubscriptionService {
 
         //We need to find out total Revenue of hotstar : from all the subscriptions combined
         //Hint is to use findAll function from the SubscriptionDb
+
         List<Subscription> subscriptions = subscriptionRepository.findAll();
-        int revenue = 0;
-        for(Subscription subscription : subscriptions){
-            revenue += subscription.getTotalAmountPaid();
+        Integer revenue = 0; // declaring revenue as an Integer object
+
+        for (Subscription subscription : subscriptions) {
+            Integer totalAmountPaid = subscription.getTotalAmountPaid();
+            if (totalAmountPaid != null) { // null check
+                revenue += totalAmountPaid;
+            }
         }
 
         return revenue;
