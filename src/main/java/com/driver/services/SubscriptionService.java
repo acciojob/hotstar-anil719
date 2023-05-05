@@ -61,13 +61,13 @@ public class SubscriptionService {
        if(userPack == SubscriptionType.ELITE) throw new Exception("Already the best Subscription");
        int diff = 0;
        if(userPack == SubscriptionType.BASIC){
-           diff =  800 + 250 * subscription.getNoOfScreensSubscribed() - 500 + 200 * subscription.getNoOfScreensSubscribed();
-           subscription.setTotalAmountPaid(subscription.getTotalAmountPaid()+diff);
+           diff =  800 + 250 * subscription.getNoOfScreensSubscribed() - subscription.getTotalAmountPaid();
+           subscription.setTotalAmountPaid(800 + 250 * subscription.getNoOfScreensSubscribed());
            subscription.setSubscriptionType(SubscriptionType.PRO);
        }
        else if(userPack == SubscriptionType.PRO){
-           diff = 1000 + 350 * subscription.getNoOfScreensSubscribed() - 800 + 250 * subscription.getNoOfScreensSubscribed();
-           subscription.setTotalAmountPaid(subscription.getTotalAmountPaid()+diff);
+           diff = 1000 + 350 * subscription.getNoOfScreensSubscribed() - subscription.getTotalAmountPaid();
+           subscription.setTotalAmountPaid(1000 + 350 * subscription.getNoOfScreensSubscribed());
            subscription.setSubscriptionType(SubscriptionType.ELITE);
        }
        subscriptionRepository.save(subscription);
@@ -80,13 +80,11 @@ public class SubscriptionService {
         //Hint is to use findAll function from the SubscriptionDb
 
         List<Subscription> subscriptions = subscriptionRepository.findAll();
-        Integer revenue = 0; // declaring revenue as an Integer object
+        int revenue = 0; // declaring revenue as an Integer object
 
         for (Subscription subscription : subscriptions) {
-            Integer totalAmountPaid = subscription.getTotalAmountPaid();
-            if (totalAmountPaid != null) { // null check
-                revenue += totalAmountPaid;
-            }
+            int totalAmountPaid = subscription.getTotalAmountPaid();
+            revenue += totalAmountPaid;
         }
         return revenue;
     }
